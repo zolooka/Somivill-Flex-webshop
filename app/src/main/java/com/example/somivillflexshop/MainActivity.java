@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.net.Uri;
@@ -25,8 +24,6 @@ import android.view.KeyEvent;
 import android.webkit.WebResourceRequest;
 
 
-
-
 public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
@@ -39,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         CustomWebViewClient client = new CustomWebViewClient(this);
         checkDownloadPermission();
         webView = findViewById(R.id.webView);
+        webView.setWebViewClient(new MyWebViewClient());
         webView.loadUrl("http://www.somivill-flex.hu");
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
@@ -124,6 +122,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if ("http://www.somivill-flex.hu".equals(request.getUrl().getHost())) {
+                return false;
+            }
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, request.getUrl());
+            startActivity(intent);
+            return true;
+        }
+
+    }
+
+
+
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        if( url.startsWith("http:") || url.startsWith("https:") ) {
+            return false;
+        }
+
+        // Otherwise allow the OS to handle it
+        else if (url.startsWith("tel:")) {
+            Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+            startActivity(tel);
+            return true;
+        }
+        else if (url.startsWith("mailto:")) {
+            String body = "Enter your Question, Enquiry or Feedback below:\n\n";
+            Intent mail = new Intent(Intent.ACTION_SEND);
+            mail.setType("application/octet-stream");
+            mail.putExtra(Intent.EXTRA_EMAIL, new String[]{"email address"});
+            mail.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+            mail.putExtra(Intent.EXTRA_TEXT, body);
+            startActivity(mail);
+            return true;
+        }
+        return true;
+    }
 }
 
 
