@@ -1,7 +1,6 @@
 package com.example.somivillflexshop;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
@@ -22,10 +21,14 @@ import android.content.IntentFilter;
 import android.app.Activity;
 import android.view.KeyEvent;
 import android.webkit.WebResourceRequest;
+import android.text.TextUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.text.BreakIterator;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private WebView webView;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Letöltés...", Toast.LENGTH_SHORT).show();
                 registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
             }
+
             BroadcastReceiver onComplete = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -78,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if(keyCode == KeyEvent.KEYCODE_BACK && this.webView.canGoBack()){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && this.webView.canGoBack()) {
             this.webView.goBack();
             return true;
         }
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -122,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -137,35 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if( url.startsWith("http:") || url.startsWith("https:") ) {
-            return false;
-        }
-
-        // Otherwise allow the OS to handle it
-        else if (url.startsWith("tel:")) {
-            Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-            startActivity(tel);
-            return true;
-        }
-        else if (url.startsWith("mailto:")) {
-            String body = "Enter your Question, Enquiry or Feedback below:\n\n";
-            Intent mail = new Intent(Intent.ACTION_SEND);
-            mail.setType("application/octet-stream");
-            mail.putExtra(Intent.EXTRA_EMAIL, new String[]{"email address"});
-            mail.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-            mail.putExtra(Intent.EXTRA_TEXT, body);
-            startActivity(mail);
-            return true;
-        }
-        return true;
-    }
 }
-
-
-
 
 class CustomWebViewClient extends WebViewClient{
     private Activity activity;
