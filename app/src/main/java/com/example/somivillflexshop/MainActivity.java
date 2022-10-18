@@ -6,8 +6,6 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Process;
-import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.net.Uri;
@@ -24,11 +22,6 @@ import android.content.IntentFilter;
 import android.app.Activity;
 import android.view.KeyEvent;
 import android.webkit.WebResourceRequest;
-import android.text.TextUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.text.BreakIterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -142,8 +135,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+    }
 
+    public boolean shouldOverrideUrlLoading(WebView webview, String url) {
+        if (url.startsWith("tel://"))
+        {
+            Intent intent = new Intent(Intent.ACTION_SENDTO,Uri.parse(url));
+            startActivity(intent);
+            return true;
+        }
 
+        else if (url.startsWith("mailto:"))
+        {
+            Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse(url));
+            startActivity(intent);
+            return true;
+        }
+        return true;
+    }
 }
 
 class CustomWebViewClient extends WebViewClient {
