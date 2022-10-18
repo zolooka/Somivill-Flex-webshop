@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Biztosan kilépsz?");
         alertDialogBuilder
-                .setMessage("Kattints az 'Igen'-re a kilépéshez!")
+                .setMessage("Kattints az \"Igen\"-re a kilépéshez!")
                 .setCancelable(false)
                 .setPositiveButton("Igen",
                         new DialogInterface.OnClickListener() {
