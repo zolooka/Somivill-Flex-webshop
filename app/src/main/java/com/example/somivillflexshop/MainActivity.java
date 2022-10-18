@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkDownloadPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(MainActivity.this, "Write External Storage permission allows us to save files. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Egyes részeknék lehetősége van fájlokat letölteni. Ezek letöltéséhez kell engedélyt adni.", Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         }
