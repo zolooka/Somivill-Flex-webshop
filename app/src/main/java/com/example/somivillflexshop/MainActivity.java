@@ -1,10 +1,13 @@
 package com.example.somivillflexshop;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Process;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.net.Uri;
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Biztosan kilépsz?");
+        alertDialogBuilder.setTitle("Biztosan ki szeretnél lépni?");
         alertDialogBuilder
                 .setMessage("Kattints az \"Igen\"-re a kilépéshez!")
                 .setCancelable(false)
@@ -113,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
                                 android.os.Process.killProcess(android.os.Process.myPid());
                                 System.exit(1);
                             }
-                        })
+                        }
+                )
 
                 .setNegativeButton("Nem", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -129,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class MyWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        public boolean shouldOverrideUrlLoading(WebView view, @NonNull WebResourceRequest request) {
             if ("http://www.somivill-flex.hu".equals(request.getUrl().getHost())) {
                 return false;
             }
@@ -139,23 +143,23 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-    }
 
 }
 
-class CustomWebViewClient extends WebViewClient{
+class CustomWebViewClient extends WebViewClient {
     private Activity activity;
-    public CustomWebViewClient(Activity activity){
+
+    public CustomWebViewClient(Activity activity) {
         this.activity = activity;
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView webView, String url){
+    public boolean shouldOverrideUrlLoading(WebView webView, String url) {
         return false;
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request){
+    public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request) {
         return false;
     }
 }
