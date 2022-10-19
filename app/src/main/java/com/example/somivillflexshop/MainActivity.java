@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
+import android.net.MailTo;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,9 +24,12 @@ import android.app.Activity;
 import android.view.KeyEvent;
 import android.webkit.WebResourceRequest;
 
+import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
+    private String url;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -135,24 +139,32 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-    }
 
-    public boolean shouldOverrideUrlLoading(WebView webview, String url) {
-        if (url.startsWith("tel://"))
-        {
-            Intent intent = new Intent(Intent.ACTION_SENDTO,Uri.parse(url));
-            startActivity(intent);
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            String url_https = "https://somivill-flex.hu/";
+            String url_http = "http://somivill-flex.hu/";
+            Uri tel = Uri.parse("tel://+36309432269");
+            Uri mail = Uri.parse("mailto:gergely.istvan@somivillflex.hu");
+            // all links  with in ur site will be open inside the webview
+            //links that start ur domain example(http://www.example.com/)
+            if (url != null && (url.startsWith(url_http) || url.startsWith(url_https))) {
+                return false;
+            }
+            else if (Objects.equals(url, "tel://+36309432269")) {
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, tel);
+                startActivity(launchBrowser);
+                return true;
+            }
+            else if (Objects.equals(url, "mailto:gergely.istvan@somivillflex.hu")) {
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, mail);
+                startActivity(launchBrowser);
+                return true;
+            }
             return true;
         }
-
-        else if (url.startsWith("mailto:"))
-        {
-            Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse(url));
-            startActivity(intent);
-            return true;
-        }
-        return true;
     }
+
+
 }
 
 class CustomWebViewClient extends WebViewClient {
