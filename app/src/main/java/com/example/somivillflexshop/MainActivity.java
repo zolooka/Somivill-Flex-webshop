@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
         });
-
     }
 
     private void checkDownloadPermission() {
@@ -126,30 +125,39 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             String url_https = "https://somivill-flex.hu/";
             String url_http = "http://somivill-flex.hu/";
-            Uri tel = Uri.parse("tel://+36309432269");
-            Uri mail = Uri.parse("mailto:gergely.istvan@somivillflex.hu");
-            if (url != null && (url.startsWith(url_http) || url.startsWith(url_https))) {
+
+            if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
+                view.getContext().startActivity(
+                        new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                return true;
+            }
+            else if (url.startsWith("mailto:")) {
+                String mail_add = url.replace("mailto:", "");
+                MailTo mailto = MailTo.parse(mail_add);
+
+                Intent mail = new Intent(Intent.ACTION_SEND);
+                mail.setType("message/rfc822");
+                mail.putExtra(Intent.EXTRA_SUBJECT, "Kérdés");
+                mail.putExtra(Intent.EXTRA_EMAIL, new String[]{mailto.getTo()});
+                startActivity(mail);
+
                 return false;
             }
 
-            else if (Objects.equals(url, "tel://+36309432269")) {
-                Intent launchBrowser = new Intent(Intent.ACTION_DIAL, tel);
-                startActivity(launchBrowser);
-                return true;
-            }
-            else if (Objects.equals(url, "mailto:gergely.istvan@somivillflex.hu")) {
-                Intent launchBrowser = new Intent(Intent.ACTION_SEND, mail);
-                startActivity(launchBrowser);
+            else if (url.startsWith("tel://")) {
+                String dial_num = url.replace("tel://", "");
+                Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse(dial_num));
+                startActivity(dial);
                 return true;
             }
 
             return true;
+
         }
 
     }
@@ -173,3 +181,4 @@ class CustomWebViewClient extends WebViewClient {
         return false;
     }
 }
+
