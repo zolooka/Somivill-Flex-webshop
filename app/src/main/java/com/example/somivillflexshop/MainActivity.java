@@ -1,6 +1,5 @@
 package com.example.somivillflexshop;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -130,40 +129,30 @@ public class MainActivity extends AppCompatActivity {
 
     private class MyWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, @NonNull WebResourceRequest request) {
-            if ("http://www.somivill-flex.hu".equals(request.getUrl().getHost())) {
-                return false;
-            }
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, request.getUrl());
-            startActivity(intent);
-            return true;
-        }
-
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             String url_https = "https://somivill-flex.hu/";
             String url_http = "http://somivill-flex.hu/";
             Uri tel = Uri.parse("tel://+36309432269");
             Uri mail = Uri.parse("mailto:gergely.istvan@somivillflex.hu");
-            // all links  with in ur site will be open inside the webview
-            //links that start ur domain example(http://www.example.com/)
             if (url != null && (url.startsWith(url_http) || url.startsWith(url_https))) {
                 return false;
             }
+
             else if (Objects.equals(url, "tel://+36309432269")) {
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, tel);
+                Intent launchBrowser = new Intent(Intent.ACTION_DIAL, tel);
                 startActivity(launchBrowser);
                 return true;
             }
             else if (Objects.equals(url, "mailto:gergely.istvan@somivillflex.hu")) {
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, mail);
+                Intent launchBrowser = new Intent(Intent.ACTION_SEND, mail);
                 startActivity(launchBrowser);
                 return true;
             }
+
             return true;
         }
-    }
 
+    }
 
 }
 
