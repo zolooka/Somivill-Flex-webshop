@@ -162,6 +162,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStop(){
+        super.onStop();
+        finish();
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
+    }
+
 }
 
 class CustomWebViewClient extends WebViewClient {
